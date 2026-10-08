@@ -59,6 +59,7 @@ export class Game {
     this.pendingDeaths = 0;
     this.pendingKills = 0;
     this.keys = { up: false, down: false, left: false, right: false };
+    this.touchTarget = null;
 
     this.loadLevel(1);
   }
@@ -145,6 +146,7 @@ export class Game {
       this.subtractPoints(POINTS_LOST_PER_INTERVAL);
     }
 
+    this.steerTowardTouch();
     this.map.tick();
     this.player.update();
     // copy: a donut-powered player can eat monsters, which edits the list
@@ -181,6 +183,24 @@ export class Game {
   }
 
   // ----- input -------------------------------------------------------------
+
+  /** Finger position in world coords while pressing during play; null when released. */
+  setTouchTarget(x, y) {
+    this.touchTarget = x === null ? null : { x, y };
+    if (x === null) this.clearKeys();
+  }
+
+  /** Holds the arrow keys that point from the player toward the finger. */
+  steerTowardTouch() {
+    if (!this.touchTarget) return;
+    const DEAD_ZONE = 12;
+    const dx = this.touchTarget.x - (this.player.x + Player.SIZE / 2);
+    const dy = this.touchTarget.y - (this.player.y + Player.SIZE / 2);
+    this.keys.left = dx < -DEAD_ZONE;
+    this.keys.right = dx > DEAD_ZONE;
+    this.keys.up = dy < -DEAD_ZONE;
+    this.keys.down = dy > DEAD_ZONE;
+  }
 
   setKey(name, down) {
     this.keys[name] = down;

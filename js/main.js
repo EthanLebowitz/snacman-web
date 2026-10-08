@@ -64,23 +64,26 @@ async function main() {
   });
   window.addEventListener('blur', () => game.clearKeys());
 
-  canvas.addEventListener('pointerdown', (e) => {
+  const toWorld = (e) => {
     const rect = canvas.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * WORLD_SIZE;
-    const y = ((e.clientY - rect.top) / rect.height) * WORLD_SIZE;
-    game.click(x, y);
+    return [((e.clientX - rect.left) / rect.width) * WORLD_SIZE, ((e.clientY - rect.top) / rect.height) * WORLD_SIZE];
+  };
+  // touch: the character walks toward wherever the finger is pressing
+  const steering = (e) => e.pointerType !== 'mouse' && game.state === State.GAME;
+  canvas.addEventListener('pointerdown', (e) => {
+    const [x, y] = toWorld(e);
+    if (steering(e)) {
+      canvas.setPointerCapture(e.pointerId);
+      game.setTouchTarget(x, y);
+    } else {
+      game.click(x, y);
+    }
   });
-
-  for (const btn of document.querySelectorAll('#dpad button')) {
-    const key = btn.dataset.key;
-    const press = (down) => (e) => {
-      e.preventDefault();
-      game.setKey(key, down);
-    };
-    btn.addEventListener('pointerdown', press(true));
-    for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) btn.addEventListener(ev, press(false));
-    btn.addEventListener('contextmenu', (e) => e.preventDefault());
-  }
+  canvas.addEventListener('pointermove', (e) => {
+    if (game.touchTarget && steering(e)) game.setTouchTarget(...toWorld(e));
+  });
+  for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, () => game.setTouchTarget(null));
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
 
   // ----- loop: fixed 17 ms logic ticks (same speed on any monitor), draw every frame -----
   let last = performance.now();
