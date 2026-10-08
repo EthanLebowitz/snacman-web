@@ -257,7 +257,7 @@ export function makeEnemy(type, game, map, player) {
   }
   if (type === 'all seeing') {
     const m = new Monster(spawn.x, spawn.y, 500, new TurnCloserToPlayer(), game, map, player);
-    m.setSprites('allSeeingMonster', 'allSeeingMonster', 'allSeeingMonsterScared');
+    m.setSprites('allSeeingMonster', 'allSeeingMonster', 'allSeeingMonster');
     m.seesPlayer = true;
     return m;
   }
