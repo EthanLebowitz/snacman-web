@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>SnacMan</title>
+  <meta name="description" content="SnacMan: a Pac-Man-style game with lava, donuts, ghost peppers and hats. (Definitely not Pac-Man.)">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="stage">
+    <canvas id="game" width="900" height="900" aria-label="SnacMan game"></canvas>
+    <div id="dpad" aria-label="Touch controls">
+      <button data-key="up" aria-label="Up">&#9650;</button>
+      <button data-key="left" aria-label="Left">&#9664;</button>
+      <button data-key="down" aria-label="Down">&#9660;</button>
+      <button data-key="right" aria-label="Right">&#9654;</button>
+    </div>
+  </main>
+  <noscript>SnacMan needs JavaScript to run.</noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
