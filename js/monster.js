@@ -257,8 +257,7 @@ export function makeEnemy(type, game, map, player) {
   }
   if (type === 'all seeing') {
     const m = new Monster(spawn.x, spawn.y, 500, new TurnCloserToPlayer(), game, map, player);
-    // the original referenced a missing allSeeingMonsterScared sprite; use the generic scared one
-    m.setSprites('allSeeingMonster', 'allSeeingMonster', 'monsterScared');
+    m.setSprites('allSeeingMonster', 'allSeeingMonster', 'allSeeingMonsterScared');
     m.seesPlayer = true;
     return m;
   }
